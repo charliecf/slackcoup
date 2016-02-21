@@ -10,12 +10,12 @@ token = "xoxb-22371870822-R4NMrSgKKyldo4xJj7nQNM4F" # Random Projects -- will ne
 sc = SlackClient(token)
 print token
 print "-------------------"
+
 print sc.api_call("api.test")
-print sc.api_call("im.open", user="U0E467GTG")
+print sc.api_call("im.open", user="U0NAWS465")
 
 user_charlie = "U0NAWS465"
 user_yitong = "T0NAWQP09"
 greeting = "Hello!\nNice to meet you."
 print sc.api_call("chat.postMessage", as_user="true:", channel=user_charlie, text=greeting)
-print sc.api_call("chat.postMessage", as_user="true:", channel=user_yitong, text=greeting)
 
