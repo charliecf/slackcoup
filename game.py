@@ -98,7 +98,7 @@ def dealCards(deck, player, numCards):
     When player uses exchange ability
     When player win a challenge and need to draw new card
     """
-    print "dealing %s cards to %s..." % (numCards, player)
+    print "dealing %s cards to %s..." % (numCards, player.name)
     for card in range(numCards):
         card = deck[0]
         deck.pop(0)
@@ -187,7 +187,7 @@ def goldAccounting(player, amount):
     player.gold += int(amount)
     if player.gold < 0:
         player.gold = 0
-    print "%s has %s gold" % (player.name, player.gold)
+    print "%s now has %s gold" % (player.name, player.gold)
 
 def haveEnoughGold(player, amount):
     if player.gold >= int(amount):
@@ -197,46 +197,95 @@ def haveEnoughGold(player, amount):
 
 def coupTarget(player, target):
     """
-    Requirements: 
+    Requirements: haveEnoughGold(), goldAccounting(), giveUpInfluence()
 
     player -7 coins
     Remove influence from target
+    not possible to block or challenge
     """
-
-    return None
+    if haveEnoughGold(player, 7):
+        goldAccounting(player, -7)
+        giveUpInfluence(target)
+    else:
+        print "You do not have enough money to coup... nice try..."
 
 def assassinateTarget(player, target):
-    # player -3 coins
-    # Attempts to assassinate target
-        # IF successful: remove influence from target
-        # ELSE: None
-    return None
+    """
+    Requirements: haveEnoughGold(), goldAccounting(), giveUpInfluence()
+
+    player -3 coins
+    Attempts to assassinate target (Assassin ability)
+        IF successful: remove influence from target
+        ELSE: None
+    """
+    if haveEnoughGold(player, 3):
+        goldAccounting(player, -3)
+        giveUpInfluence(target)
+    else:
+        print "You do not have enough money to assassinate... nice try..."
 
 def stealTarget(player, target):
-    # player attempts to steal from target
-        # IF successful: -2 coins from target, player +2 coins
-        # ELSE: None
-    return None
+    """
+    player attempts to steal from target (Captain ability)
+        IF successful: -2 coins from target, player +2 coins
+        ELSE: None
+    """
+    if target.gold == 0:
+        print "%s stole from a broke man... (0 gold) from %s" % (player, target)
+    elif target.gold == 1:
+        print "%s stole 1 gold from %s" % (player, target)
+        goldAccounting(player, +1)
+        goldAccounting(target, -2)
+    else:
+        print "%s stole 2 gold from %s" % (player, target)
+        goldAccounting(player, +2)
+        goldAccounting(target, -2)
 
 def income(player):
-    # player +1 coin
-    return None
+    """
+    Requirements: goldAccounting()
 
+    player +1 coin
+    not possible to block or challenge
+    """
+    print "%s used income, +1 Gold" % player.name
+    goldAccounting(player, 1)
 
 def foreignAid(player):
-    # player attempts to foreign aid
-        # IF successful: player +2 coins
-        # ELSE: None
-    return None
+    """
+    Requirements: goldAccounting()
+
+    player attempts to foreign aid
+        IF successful: player +2 coins
+        ELSE: None
+    """
+    print "%s used foreign aid, +2 Gold" % player.name
+    goldAccounting(player, 2)
 
 def taxDuke(player):
-    # player attempts to tax
-        # IF successful player +3 coins
-        # Else: None
-    return None
+    """
+    Requirements: goldAccounting()
 
-def exchangeCards(player):
-    return None
+    player attempts to tax (Duke ability)
+        IF successful player +3 coins
+        ELSE: None
+    """
+    print "%s abused his power as a Duke and taxed the poor, good job! +3 Gold" % player.name
+    goldAccounting(player, 3)
+
+def exchangeCards(deck, player):
+    """
+    Requirements: dealCards(), returnCardsToDeck()
+
+    player attempts to exchange cards (Ambassador ability)
+        IF successful player +2 cards, return 2 cards
+        ELSE: None
+    """
+    dealCards(deck, player, 2)
+    while len(player.cards) != 2:
+        card = raw_input("What card would you like to return? > ")
+        returnCardsToDeck(deck, player, card)
+    print "completed exchange!"
 
 # ======== GAME MASTER TOOLS ======== 
 def killPlayer(player):
@@ -283,9 +332,18 @@ displayBoard(players)
 
 print players['playerCharlie'].gold
 
-goldAccounting(players['playerCharlie'], -10)
+goldAccounting(players['playerCharlie'], 8)
 print players['playerCharlie'].gold
 
+coupTarget(players['playerCharlie'], players['playerAynRand'])
+displayBoard(players)
+
+stealTarget(players['playerAynRand'], players['playerCharlie'])
+displayBoard(players)
+
+income(players['playerAynRand'])
+
+exchangeCards(gameDeck, players['playerCharlie'])
 
 # Begin Game
 print "-----------------------------------------"
