@@ -63,6 +63,8 @@ class Player(object):
 # Initialize a player, this occurs at the start of a game
 def makePlayer(deck, name):
     """
+    Requirements: dealCards()
+
     Start with 2 coins
     2 random cards
     Influence would equal to number of cards (vice versa), should equal 2
@@ -95,17 +97,24 @@ def dealCards(deck, player, numCards):
     When player uses exchange ability
     When player win a challenge and need to draw new card
     """
-    print "dealing %s cards..." % numCards
+    print "dealing %s cards to %s..." % (numCards, player)
     for card in range(numCards):
         card = deck[0]
         deck.pop(0)
         player.cards.append(card)
         print "added %s card for %s" % (card, player.name)
     print player.cards
-    # return player.cards
+
+def doesPlayerHaveCard(player, card):
+    if card in player.cards:
+        return True
+    else:
+        return False 
 
 def returnCardsToDeck(deck, player, card):
     """
+    Requirements: doesPlayerHaveCard()
+
     deck = list
     player = object
     card = string
@@ -114,13 +123,28 @@ def returnCardsToDeck(deck, player, card):
     When player uses exchange ability
     When player win a challenge and need to draw new card
     """
-    return None
+    if doesPlayerHaveCard(player, card) == True:
+        print "%s returns 1 card back into the deck..." % (player)
+        player.cards.remove(card)
+        deck.append(card)
+    else:
+        print "Error: %s does not have %s card" % (player, card)
 
 def isPlayerDead(player):
-    return None
+    if player.influence == 0:
+        return True
+    else:
+        return False
 
-def removeInfluence(target):
-    return None
+def removeInfluence(player):
+    """
+    Requirements: isPlayerDead()
+    """
+    if isPlayerDead(player) == False:
+        player.influence -= 1
+    else:
+        print "Player is dead already"
+        return None
 
 def coupTarget(player, target):
     # player -7 coins
@@ -188,10 +212,6 @@ for player in temp_playerInputNames:
     print "creating %s player..." % player
     players["player{0}".format(player)] = makePlayer(gameDeck, player)
 print players
-
-# playerCharlie = makePlayer(gameDeck, 'Charlie')
-# playerAynRand = makePlayer(gameDeck, 'AynRand')
-# playerFrankenstein = makePlayer(gameDeck, 'Frankenstein')
 print ""
 print gameDeck
 
@@ -200,6 +220,20 @@ print "Killing Charlie..."
 players['playerCharlie'].isAlive = False
 print "%s is alive? %s" % (players['playerCharlie'].name, players['playerCharlie'].isAlive)
 print "%s is alive? %s" % (players['playerAynRand'].name, players['playerAynRand'].isAlive)
+
+print doesPlayerHaveCard(players['playerCharlie'], 'Assassin')
+print doesPlayerHaveCard(players['playerCharlie'], 'fake card')
+print doesPlayerHaveCard(players['playerCharlie'], players['playerCharlie'].cards[0])
+
+# print "returning card..................."
+# print players['playerCharlie'].cards
+# returnCardsToDeck(gameDeck, players['playerCharlie'], players['playerCharlie'].cards[0])
+# print players['playerCharlie'].cards
+# print gameDeck
+
+print players['playerCharlie'].influence
+removeInfluence(players['playerCharlie'])
+print players['playerCharlie'].influence
 
 # Begin Game
 print "-----------------------------------------"
