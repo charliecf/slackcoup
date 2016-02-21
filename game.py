@@ -165,17 +165,44 @@ def giveUpInfluence(player):
         else:
             print "You don't have a %s" % (card)
 
-def displayBoard():
+def displayBoard(players):
     """
     Displays all the status of every player:
     Influence Left and Cards
-    Coins
+    Gold
     """
-    return None
+    for player in players:
+        if players[player].influence == 0:
+            print "%s defeated with cards: %s" % (players[player].name, 
+                players[player].deadCards)
+        elif players[player].influence == 1:
+            print "%s has 1 life left, with %s and %s [DEAD] with %s gold" % (
+                players[player].name, players[player].cards, 
+                players[player].deadCards, players[player].gold)
+        else: 
+            print "%s has 2 lives left, with %s with %s gold" % (players[player].name, 
+                players[player].cards, players[player].gold)
+
+def goldAccounting(player, amount):
+    player.gold += int(amount)
+    if player.gold < 0:
+        player.gold = 0
+    print "%s has %s gold" % (player.name, player.gold)
+
+def haveEnoughGold(player, amount):
+    if player.gold >= int(amount):
+        return True
+    else:
+        return False
 
 def coupTarget(player, target):
-    # player -7 coins
-    # Remove influence from target
+    """
+    Requirements: 
+
+    player -7 coins
+    Remove influence from target
+    """
+
     return None
 
 def assassinateTarget(player, target):
@@ -252,9 +279,13 @@ print doesPlayerHaveCard(players['playerCharlie'], 'Assassin')
 print doesPlayerHaveCard(players['playerCharlie'], 'fake card')
 print doesPlayerHaveCard(players['playerCharlie'], players['playerCharlie'].cards[0])
 
-print players['playerCharlie'].influence
-giveUpInfluence(players['playerCharlie'])
-print players['playerCharlie'].influence
+displayBoard(players)
+
+print players['playerCharlie'].gold
+
+goldAccounting(players['playerCharlie'], -10)
+print players['playerCharlie'].gold
+
 
 # Begin Game
 print "-----------------------------------------"
