@@ -61,7 +61,7 @@ class Player(object):
         self.influence = influence
 
 # Initialize a player, this occurs at the start of a game
-def makePlayer(name):
+def makePlayer(deck, name):
     """
     Start with 2 coins
     2 random cards
@@ -69,9 +69,10 @@ def makePlayer(name):
     """
     gold = 2
     cards = []
-
-
+    influence = 2
     player = Player(name, gold, cards, influence)
+    dealCards(deck, player, 2)
+    print vars(player) # for logging purposes only
     return player
 
 def shuffleDeck(deck):
@@ -82,15 +83,37 @@ def shuffleDeck(deck):
         shuffledDeck.append(element)
     return shuffledDeck
 
-
 # Deal numCards of cards from deck to player
-def dealCards(player, numCards):
+def dealCards(deck, player, numCards):
     """
+    deck = list
+    player = object
+    numCards = int
+
     This action occurs in multiple areas:
     When player is initialized (makePlayer)
     When player uses exchange ability
-    When player uses win/loss a challenge and need to draw new card
-    """    
+    When player win a challenge and need to draw new card
+    """
+    print "dealing %s cards..." % numCards
+    for card in range(numCards):
+        card = deck[0]
+        deck.pop(0)
+        player.cards.append(card)
+        print "added %s card for %s" % (card, player.name)
+    print player.cards
+    # return player.cards
+
+def returnCardsToDeck(deck, player, card):
+    """
+    deck = list
+    player = object
+    card = string
+
+    This action is used for:
+    When player uses exchange ability
+    When player win a challenge and need to draw new card
+    """
     return None
 
 def isPlayerDead(player):
@@ -138,8 +161,8 @@ def exchangeCards(player):
     return None
 
 print gameDeck
-print shuffleDeck(gameDeck)
-
+gameDeck = shuffleDeck(gameDeck)
+print gameDeck
 
 
 # Game Starts:
@@ -150,13 +173,15 @@ temp_playerInputPlayers = 3
 # Initialize variables
 # 1. Shuffle Deck
 # 2. Create Player Objects
-playerCharlie = makePlayer('Charlie', 2, ['Card1', 'Card2'], 2)
-l = dir(playerCharlie)
+playerCharlie = makePlayer(gameDeck, 'Charlie')
 print playerCharlie.isAlive
 print playerCharlie.name
 print playerCharlie.gold
 print playerCharlie.cards
 print playerCharlie.influence
+print ""
+print gameDeck
+
 print ""
 print "Kill Charlie"
 playerCharlie.isAlive = False
