@@ -160,6 +160,12 @@ def taxDuke(player):
 def exchangeCards(player):
     return None
 
+# ======== GAME MASTER TOOLS ======== 
+def killPlayer(player):
+    players[player].influence = 0
+    players[player].isAlive = False
+    print vars(players[player])
+
 print gameDeck
 gameDeck = shuffleDeck(gameDeck)
 print gameDeck
@@ -170,27 +176,35 @@ print "Let the Coup BEGIN!"
 print "-----------------------------------------"
 # How many players?
 temp_playerInputPlayers = 3
+temp_playerInputNames = ['Charlie', 'AynRand', 'Frankenstein']
 # Initialize variables
 # 1. Shuffle Deck
+gameDeck = shuffleDeck(gameDeck)
+print gameDeck
+
 # 2. Create Player Objects
-playerCharlie = makePlayer(gameDeck, 'Charlie')
-print playerCharlie.isAlive
-print playerCharlie.name
-print playerCharlie.gold
-print playerCharlie.cards
-print playerCharlie.influence
+players = {}
+for player in temp_playerInputNames:
+    print "creating %s player..." % player
+    players["player{0}".format(player)] = makePlayer(gameDeck, player)
+print players
+
+# playerCharlie = makePlayer(gameDeck, 'Charlie')
+# playerAynRand = makePlayer(gameDeck, 'AynRand')
+# playerFrankenstein = makePlayer(gameDeck, 'Frankenstein')
 print ""
 print gameDeck
 
 print ""
-print "Kill Charlie"
-playerCharlie.isAlive = False
-print playerCharlie.isAlive
+print "Killing Charlie..."
+players['playerCharlie'].isAlive = False
+print "%s is alive? %s" % (players['playerCharlie'].name, players['playerCharlie'].isAlive)
+print "%s is alive? %s" % (players['playerAynRand'].name, players['playerAynRand'].isAlive)
 
 # Begin Game
 print "-----------------------------------------"
 while True:
-    for playerID in range(temp_playerInputPlayers):    
+    for playerID in range(temp_playerInputPlayers):
         print "Player %s your turn! What do you do?" % playerID
         print "Income | Foreign Aid | Coup | Tax | Steal | Assassinate | Exchange"
         playerInput = raw_input("> ")
