@@ -28,20 +28,51 @@ Player Action (if _player_ Foreign Aid):
 
 """
 
-# Object Deck to maintain
+# Original deck
 odeck = ['Assassin', 'Assassin', 'Assassin', 
         'Captain', 'Captain', 'Captain',
         'Duke', 'Duke', 'Duke',
         'Ambassador', 'Ambassador', 'Ambassador',
         'Contessa', 'Contessa', 'Contessa']
 
+# Create new/temporary deck for the current game, 
+# all deck manipulation should be done on gameDeck
 gameDeck = odeck[:]
 
 # Player Object
-# Number of Gold
-# Cards they have
-# Influence/Cards left
-# Still alive (in the game)
+class Player(object):
+    """
+    Player name
+    Number of Gold
+    Cards they have
+    Influence/Cards left
+    Still alive (in the game)
+    """
+    name = ""
+    gold = 0
+    cards = []
+    influence = 0
+    isAlive = True
+
+    def __init__(self, name, gold, cards, influence):
+        self.name = name
+        self.gold = gold
+        self.cards = cards
+        self.influence = influence
+
+# Initialize a player, this occurs at the start of a game
+def makePlayer(name):
+    """
+    Start with 2 coins
+    2 random cards
+    Influence would equal to number of cards (vice versa), should equal 2
+    """
+    gold = 2
+    cards = []
+
+
+    player = Player(name, gold, cards, influence)
+    return player
 
 def shuffleDeck(deck):
     shuffledDeck = []
@@ -52,8 +83,14 @@ def shuffleDeck(deck):
     return shuffledDeck
 
 
+# Deal numCards of cards from deck to player
 def dealCards(player, numCards):
-    # Deal numCards of cards from deck to player
+    """
+    This action occurs in multiple areas:
+    When player is initialized (makePlayer)
+    When player uses exchange ability
+    When player uses win/loss a challenge and need to draw new card
+    """    
     return None
 
 def isPlayerDead(player):
@@ -113,8 +150,20 @@ temp_playerInputPlayers = 3
 # Initialize variables
 # 1. Shuffle Deck
 # 2. Create Player Objects
+playerCharlie = makePlayer('Charlie', 2, ['Card1', 'Card2'], 2)
+l = dir(playerCharlie)
+print playerCharlie.isAlive
+print playerCharlie.name
+print playerCharlie.gold
+print playerCharlie.cards
+print playerCharlie.influence
+print ""
+print "Kill Charlie"
+playerCharlie.isAlive = False
+print playerCharlie.isAlive
 
 # Begin Game
+print "-----------------------------------------"
 while True:
     for playerID in range(temp_playerInputPlayers):    
         print "Player %s your turn! What do you do?" % playerID
