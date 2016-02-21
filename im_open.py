@@ -6,13 +6,16 @@ Charlie's problem, seems to be a cygwin problem... that I have yet to fix
 
 from slackclient import SlackClient
 
-token = "xoxb-22367344306-1zqg2wHJSJUPt9EqbbsJdGbH"
+token = "xoxb-22371870822-R4NMrSgKKyldo4xJj7nQNM4F" # Random Projects -- will need to change in the future
 sc = SlackClient(token)
 print token
 print "-------------------"
 print sc.api_call("api.test")
 print sc.api_call("im.open", user="U0E467GTG")
 
-chan = "U0E467GTG"
+user_charlie = "U0NAWS465"
+user_yitong = "T0NAWQP09"
 greeting = "Hello!\nNice to meet you."
-print sc.api_call("chat.postMessage", as_user="true:", channel=chan, text=greeting)
+print sc.api_call("chat.postMessage", as_user="true:", channel=user_charlie, text=greeting)
+print sc.api_call("chat.postMessage", as_user="true:", channel=user_yitong, text=greeting)
+
