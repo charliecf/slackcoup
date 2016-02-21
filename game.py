@@ -149,7 +149,27 @@ def removeInfluence(player):
 
 def giveUpInfluence(player):
     """
+    Requirements: doesPlayerHaveCard(), removeInfluence()
+
     player has lost an influence, needs to pick an influence to give up
+    """
+    print "%s has lost an influence, please pick an influence to lose" % (player.name)
+    while True:
+        card = raw_input("> ")
+        if doesPlayerHaveCard(player, card):
+            print "%s has given up his %s" % (player.name, card)
+            player.cards.remove(card)
+            player.deadCards.append(card)
+            removeInfluence(player)
+            return
+        else:
+            print "You don't have a %s" % (card)
+
+def displayBoard():
+    """
+    Displays all the status of every player:
+    Influence Left and Cards
+    Coins
     """
     return None
 
@@ -233,7 +253,7 @@ print doesPlayerHaveCard(players['playerCharlie'], 'fake card')
 print doesPlayerHaveCard(players['playerCharlie'], players['playerCharlie'].cards[0])
 
 print players['playerCharlie'].influence
-removeInfluence(players['playerCharlie'])
+giveUpInfluence(players['playerCharlie'])
 print players['playerCharlie'].influence
 
 # Begin Game
