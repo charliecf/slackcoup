@@ -51,6 +51,7 @@ class Player(object):
     name = ""
     gold = 0
     cards = []
+    deadCards = []
     influence = 0
     isAlive = True
 
@@ -146,6 +147,12 @@ def removeInfluence(player):
         print "Player is dead already"
         return None
 
+def giveUpInfluence(player):
+    """
+    player has lost an influence, needs to pick an influence to give up
+    """
+    return None
+
 def coupTarget(player, target):
     # player -7 coins
     # Remove influence from target
@@ -224,12 +231,6 @@ print "%s is alive? %s" % (players['playerAynRand'].name, players['playerAynRand
 print doesPlayerHaveCard(players['playerCharlie'], 'Assassin')
 print doesPlayerHaveCard(players['playerCharlie'], 'fake card')
 print doesPlayerHaveCard(players['playerCharlie'], players['playerCharlie'].cards[0])
-
-# print "returning card..................."
-# print players['playerCharlie'].cards
-# returnCardsToDeck(gameDeck, players['playerCharlie'], players['playerCharlie'].cards[0])
-# print players['playerCharlie'].cards
-# print gameDeck
 
 print players['playerCharlie'].influence
 removeInfluence(players['playerCharlie'])
