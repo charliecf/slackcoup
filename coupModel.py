@@ -14,7 +14,7 @@ class Player(object):
     cards = []
     deadCards = []
     influence = 0
-    isAlive = True
+    # isAlive = True
 
     def __init__(self, name, gold, cards, influence):
         self.name = name
@@ -92,17 +92,17 @@ def returnCardsToDeck(deck, player, card):
     else:
         print "Error: %s does not have %s card" % (player, card)
 
-def isPlayerDead(player):
-    if player.influence == 0:
+def isPlayerAlive(player):
+    if player.influence > 0:
         return True
     else:
         return False
 
 def removeInfluence(player):
     """
-    Requirements: isPlayerDead()
+    Requirements: isPlayerAlive()
     """
-    if isPlayerDead(player) == False:
+    if isPlayerAlive(player) == True:
         player.influence -= 1
     else:
         print "Player is dead already"
