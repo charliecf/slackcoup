@@ -30,10 +30,10 @@ def getUserInput(channel):
 	    for evt in new_evts:
 	        print(evt)
 	        if "type" in evt:
-	            if evt["type"] == "message" and "text" in evt:
+	            if evt["type"] == "message" and "text" in evt and evt["channel"] == channel:
 	                message = evt["text"]
 	                return message
-	    time.sleep(3)
+	    time.sleep(1)
 
 
 # postMesage(groupChannel, "msgGroupFunc Test\n second line?")
