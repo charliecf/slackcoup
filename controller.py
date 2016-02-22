@@ -115,11 +115,21 @@ def exchangeCards(deck, player):
         IF successful player +2 cards, return 2 cards
         ELSE: None
     """
+    originalHand = player.cards
+    switchCounter = 0
     dealCards(deck, player, 2)
+    newHand = player.cards
+    postMessage(player.slackId, "Your cards: %s" % newHand)
     while len(player.cards) != 2:
-        card = raw_input("What card would you like to return? > ")
+        postMessage(player.slackId, "What card would you like to return? > ")
+        card = getUserInput(player.slackChannel)
+        if card in originalHand:
+            switchCounter += 1
         returnCardsToDeck(deck, player, card)
-    print "completed exchange!"
+
+    newHand = player.cards
+    postMessage(player.slackId, "Your new hand: %s" % newHand)
+    postMessage(groupChannel, "%s switched out %s cards" % (player.name, switchCounter))
 
 # action_ functions contains the challenge logic and calls the plain function 
 # which assumes a successful action
@@ -141,8 +151,8 @@ def action_stealTarget(deck, player, target):
         postMessage(groupChannel, "Say: 'Challenge'")
         challengerInput = ""
         challengerInput = getUserInputTimeout(groupChannel, 30)
-        challengerUser = getPlayerFromSlackId(players, challengerInput[1])
         if challengerInput[0] == "Challenge":
+            challengerUser = getPlayerFromSlackId(players, challengerInput[1])
             # print challengerInput[1]
             challengesCard(gameDeck, challengerUser, players[str('player' + temp_playerInputNames[playerID])], "Captain")
             if challengesCard(gameDeck, challengerUser, players[str('player' + temp_playerInputNames[playerID])], "Captain") == False:
@@ -158,8 +168,8 @@ def action_stealTarget(deck, player, target):
         postMessage(groupChannel, "Say: 'Challenge'")
         challengerInput = ""
         challengerInput = getUserInputTimeout(groupChannel, 30)
-        challengerUser = getPlayerFromSlackId(players, challengerInput[1])
         if challengerInput[0] == "Challenge":
+            challengerUser = getPlayerFromSlackId(players, challengerInput[1])
             # print challengerInput[1]
             challengesCard(gameDeck, challengerUser, players[str('player' + temp_playerInputNames[playerID])], "Ambassador")
             if challengesCard(gameDeck, challengerUser, players[str('player' + temp_playerInputNames[playerID])], "Ambassador") == False:
@@ -195,8 +205,8 @@ def action_assassinateTarget(deck, player, target):
         postMessage(groupChannel, "Say: 'Challenge'")
         challengerInput = ""
         challengerInput = getUserInputTimeout(groupChannel, 30)
-        challengerUser = getPlayerFromSlackId(players, challengerInput[1])
         if challengerInput[0] == "Challenge":
+            challengerUser = getPlayerFromSlackId(players, challengerInput[1])
             # print challengerInput[1]
             challengesCard(gameDeck, challengerUser, players[str('player' + temp_playerInputNames[playerID])], "Contessa")
             if challengesCard(gameDeck, challengerUser, players[str('player' + temp_playerInputNames[playerID])], "Contessa") == False:
@@ -223,8 +233,8 @@ def action_exchangeCards(deck, player):
     postMessage(groupChannel, "Say: 'Challenge'")
     challengerInput = ""
     challengerInput = getUserInputTimeout(groupChannel, 30)
-    challengerUser = getPlayerFromSlackId(players, challengerInput[1])
     if challengerInput[0] == "Challenge":
+        challengerUser = getPlayerFromSlackId(players, challengerInput[1])
         # print challengerInput[1]
         challengesCard(gameDeck, challengerUser, players[str('player' + temp_playerInputNames[playerID])], "Ambassador")
         if challengesCard(gameDeck, challengerUser, players[str('player' + temp_playerInputNames[playerID])], "Ambassador") == False:
@@ -310,8 +320,8 @@ while True:
                     postMessage(groupChannel, "Say: 'I have a Duke'")
                     challengerInput = ""
                     challengerInput = getUserInputTimeout(groupChannel, 30)
-                    challengerUser = getPlayerFromSlackId(players, challengerInput[1])
                     if challengerInput[0] != 'I have a Duke':
+                        challengerUser = getPlayerFromSlackId(players, challengerInput[1])
                         # No challenges:
                         postMessage(groupChannel, "30 seconds up! I see no challengers...'")
                         foreignAid(players[str('player' + temp_playerInputNames[playerID])])
@@ -323,8 +333,8 @@ while True:
                         postMessage(groupChannel, "Say: 'Challenge'")
                         challengerInput2 = ""
                         challengerInput2 = getUserInputTimeout(groupChannel, 30)
-                        challengerUser2 = getPlayerFromSlackId(players, challengerInput[1])
                         if challengerInput[0] == "Challenge":
+                            challengerUser2 = getPlayerFromSlackId(players, challengerInput[1])
                             # Check if there is Duke
                             # print challengerInput[1]
                             challengesCard(gameDeck, challengerUser2, challengerUser, "Duke")
@@ -353,8 +363,8 @@ while True:
                     postMessage(groupChannel, "Say: 'Challenge'")
                     challengerInput = ""
                     challengerInput = getUserInputTimeout(groupChannel, 30)
-                    challengerUser = getPlayerFromSlackId(players, challengerInput[1])
                     if challengerInput[0] == "Challenge":
+                        challengerUser = getPlayerFromSlackId(players, challengerInput[1])
                         # Check if there is Duke
                         # print challengerInput[1]
                         challengesCard(gameDeck, challengerUser, players[str('player' + temp_playerInputNames[playerID])], "Duke")

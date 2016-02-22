@@ -57,6 +57,7 @@ def getUserInputTimeout(channel, timeout):
 	                return message, user
 	    time.sleep(1)
 	    timeoutTimer += 1
+	return None, None
 
 
 
