@@ -214,7 +214,7 @@ def action_assassinateTarget(deck, player, target):
             else:
                 assassinateTarget(player, target)
         else:
-            postMessage(groupChannel, "Blocks Assassin with Contessa")
+            postMessage(groupChannel, "%s blocks Assassin with Contessa" % target.name)
 
     elif playerInput == "Challenge":
         challengesCard(deck, target, player, "Assassin")
@@ -320,7 +320,7 @@ for playerID in range(temp_playerInputPlayers):
 
 # postMessage(groupChannel, displayBoard(players))
 
-# goldAccounting(players['playeruser_charlie'], 20)
+goldAccounting(players['playeruser_charlie'], 20)
 # coupTarget(players['playerCharlie'], players['playerAynRand'])
 # coupTarget(players['playerCharlie'], players['playerAynRand'])
 # displayBoard(players)
