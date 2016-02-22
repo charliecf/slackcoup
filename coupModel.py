@@ -112,30 +112,6 @@ def removeInfluence(player):
         print "Player is dead already"
         return None
 
-def displayBoard(players):
-    """
-    Displays all the status of every player:
-    Influence Left and Cards
-    Gold
-    """
-    displayResult = ""
-    for player in players:
-        if players[player].influence == 0:
-            displayResult += "%s defeated with cards: %s" % (players[player].name, 
-                players[player].deadCards)
-            displayResult += "\n"
-        elif players[player].influence == 1:
-            displayResult += "%s has 1 life left, with %s and %s [DEAD] with %s gold" % (
-                players[player].name, players[player].cards, 
-                players[player].deadCards, players[player].gold)
-            displayResult += "\n"
-        else: 
-            displayResult += "%s has 2 lives left, with %s with %s gold" % (players[player].name, 
-                players[player].cards, players[player].gold)
-            displayResult += "\n"
-
-    return displayResult
-
 def goldAccounting(player, amount):
     player.gold += int(amount)
     if player.gold < 0:
@@ -192,6 +168,29 @@ def killPlayer(player):
     players[player].isAlive = False
     print vars(players[player])
 
+def admin_displayBoard(players):
+    """
+    Displays all the status of every player:
+    Influence Left and Cards
+    Gold
+    """
+    displayResult = ""
+    for player in players:
+        if players[player].influence == 0:
+            displayResult += "%s defeated with cards: %s" % (players[player].name, 
+                players[player].deadCards)
+            displayResult += "\n"
+        elif players[player].influence == 1:
+            displayResult += "%s has 1 life left, with %s and %s [DEAD] with %s gold" % (
+                players[player].name, players[player].cards, 
+                players[player].deadCards, players[player].gold)
+            displayResult += "\n"
+        else: 
+            displayResult += "%s has 2 lives left, with %s with %s gold" % (players[player].name, 
+                players[player].cards, players[player].gold)
+            displayResult += "\n"
+
+    return displayResult
 
 ### ====== GAME MASTER TESTING ======
 # from coupDeck import *

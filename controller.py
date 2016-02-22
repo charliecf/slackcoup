@@ -245,6 +245,9 @@ def action_exchangeCards(deck, player):
         exchangeCards(deck, player)
     return None
 
+# Status and Display related functions.
+# These should not alter or modify any data
+
 def selfStatusUpdate(player):
     cards = player.cards
     deadCards = player.deadCards
@@ -254,6 +257,29 @@ def selfStatusUpdate(player):
         postMessage(player.slackId, "You have %s cards" % cards)
     else:
         postMessage(player.slackId, "You have %s cards and %s [DEAD]" % (cards, deadCards))
+
+def displayBoard(players):
+    """
+    Displays all the status of every player:
+    Influence Left and Cards
+    Gold
+    """
+    displayResult = ""
+    for player in players:
+        if players[player].influence == 0:
+            displayResult += "%s defeated with cards: %s" % (players[player].name, 
+                players[player].deadCards)
+            displayResult += "\n"
+        elif players[player].influence == 1:
+            displayResult += "%s has 1 life left and %s [DEAD] with %s gold" % (
+                players[player].name, players[player].deadCards, players[player].gold)
+            displayResult += "\n"
+        else: 
+            displayResult += "%s has 2 lives left, with %s gold" % (
+                players[player].name, players[player].gold)
+            displayResult += "\n"
+
+    return displayResult
 
 # ----------------------------------------------
 # ---------- controller functions end ----------
@@ -265,10 +291,15 @@ postMessage(groupChannel, "Let the Coup BEGIN!")
 postMessage(groupChannel, "Listen up kids, I'm an alpha Octopus, so if you can't follow my instructions to the tee, go buy a dictionary!")
 print "-----------------------------------------"
 # How many players?
+# temp_playerInputPlayers = 2
+# temp_playerInputNames = ['user_charlie', 'user_fakecharlie']
+# temp_playerInputIds = ['U0NAWS465', 'U0NCAB0DD']
+# temp_playerInputChannel = ['D0NAXBNTU', 'D0NCB3F8S']
+
 temp_playerInputPlayers = 2
-temp_playerInputNames = ['user_charlie', 'user_fakecharlie']
-temp_playerInputIds = ['U0NAWS465', 'U0NCAB0DD']
-temp_playerInputChannel = ['D0NAXBNTU', 'D0NCB3F8S']
+temp_playerInputNames = ['user_charlie', 'user_yitong']
+temp_playerInputIds = ['U0NAWS465', 'U0NAWTM9D']
+temp_playerInputChannel = ['D0NAXBNTU', 'D0NAU1R43']
 
 # Initialize variables
 # 1. Shuffle Deck
@@ -279,14 +310,17 @@ print gameDeck
 # 2. Create Player Objects
 players = {}
 for player in temp_playerInputNames:
-    postMessage(groupChannel, "creating %s player..." % player)
+    postMessage(groupChannel, "player %s joining the game..." % player)
     players["player{0}".format(player)] = makePlayer(gameDeck, player, 
         temp_playerInputIds[temp_playerInputNames.index(player)], 
         temp_playerInputChannel[temp_playerInputNames.index(player)])
 
-postMessage(groupChannel, displayBoard(players))
+for playerID in range(temp_playerInputPlayers):
+    selfStatusUpdate(players[str('player' + temp_playerInputNames[playerID])])
 
-goldAccounting(players['playeruser_charlie'], 20)
+# postMessage(groupChannel, displayBoard(players))
+
+# goldAccounting(players['playeruser_charlie'], 20)
 # coupTarget(players['playerCharlie'], players['playerAynRand'])
 # coupTarget(players['playerCharlie'], players['playerAynRand'])
 # displayBoard(players)
@@ -296,8 +330,11 @@ goldAccounting(players['playeruser_charlie'], 20)
 
 # Begin Game
 print "-----------------------------------------"
+postMessage(groupChannel, "-----------------------------------------")
 while True:
     for playerID in range(temp_playerInputPlayers):
+        postMessage(groupChannel, displayBoard(players))
+        selfStatusUpdate(players[str('player' + temp_playerInputNames[playerID])])
         if isPlayerAlive(players[str('player' + temp_playerInputNames[playerID])]):
             postMessage(groupChannel, "Player %s's turn!" % players[str('player' + temp_playerInputNames[playerID])].name)
             postMessage(players[str('player' + temp_playerInputNames[playerID])].slackId, 

@@ -9,12 +9,12 @@ print sc.api_call("api.test")
 print sc.api_call("im.open", user="U0NAWS465") # Charlie
 print sc.api_call("im.open", user="U0NCAB0DD") # fakeCharlie
 print sc.api_call("im.open", user="U0NBKF2BZ") # Jeff
-print sc.api_call("im.open", user="U0NBKF2BZ") # Yitong
+print sc.api_call("im.open", user="U0NAWTM9D") # Yitong
 
 user_charlie = "U0NAWS465"
 user_fakecharlie = "U0NCAB0DD"
 user_jeff = "U0NBKF2BZ"
-user_yitong = "U0NBKF2BZ"
+user_yitong = "U0NAWTM9D"
 
 groupChannel = "C0NCQ4K4K" # coup-game-test
 # groupChannel = "C0NAXDD7S"
