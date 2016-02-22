@@ -1,13 +1,24 @@
 #!/usr/bin/python
 from coupDeck import *
 from coupModel import *
+from slackView import *
+
+import time, pprint
+from slackclient import SlackClient
+
+# print "-----------------------------------------"
+# token = "xoxb-22371870822-R4NMrSgKKyldo4xJj7nQNM4F" # Random Projects -- will need to change in the future
+# sc = SlackClient(token)
 
 # Game Starts:
-print "Let the Coup BEGIN!"
+postMessage(groupChannel, "Let the Coup BEGIN!")
 print "-----------------------------------------"
 # How many players?
-temp_playerInputPlayers = 3
-temp_playerInputNames = ['Charlie', 'AynRand', 'Frankenstein']
+temp_playerInputPlayers = 2
+temp_playerInputNames = ['user_charlie', 'user_fakecharlie']
+temp_playerInputIds = ['U0NAWS465', 'U0NCAB0DD']
+temp_playerInputChannel = ['D0NAXBNTU', 'D0NCB3F8S']
+
 # Initialize variables
 # 1. Shuffle Deck
 gameDeck = odeck[:]
@@ -17,10 +28,12 @@ print gameDeck
 # 2. Create Player Objects
 players = {}
 for player in temp_playerInputNames:
-    print "creating %s player..." % player
-    players["player{0}".format(player)] = makePlayer(gameDeck, player)
+    postMessage(groupChannel, "creating %s player..." % player)
+    players["player{0}".format(player)] = makePlayer(gameDeck, player, 
+        temp_playerInputIds[temp_playerInputNames.index(player)], 
+        temp_playerInputChannel[temp_playerInputNames.index(player)])
 
-displayBoard(players)
+postMessage(groupChannel, displayBoard(players))
 
 # goldAccounting(players['playerCharlie'], 20)
 # coupTarget(players['playerCharlie'], players['playerAynRand'])
@@ -32,11 +45,13 @@ print "-----------------------------------------"
 while True:
     for playerID in range(temp_playerInputPlayers):
         if isPlayerAlive(players[str('player' + temp_playerInputNames[playerID])]):
-            print "Player %s your turn! What do you do?" % players[str('player' + temp_playerInputNames[playerID])].name
-            print "Income | Foreign Aid | Coup | Tax | Steal | Assassinate | Exchange"
+            postMessage(groupChannel, "Player %s's turn!" % players[str('player' + temp_playerInputNames[playerID])].name)
+            postMessage(players[str('player' + temp_playerInputNames[playerID])].slackId, 
+                "Your turn! What will you do? \n \
+                Income | Foreign Aid | Coup | Tax | Steal | Assassinate | Exchange")
             playerTurnTrigger = True
             while playerTurnTrigger == True:
-                playerInput = raw_input("> ")
+                playerInput = getUserInput(players[str('player' + temp_playerInputNames[playerID])].slackId)
                 # Player Inputs
                 # For every other player, Accept | Challenge options + more
                 if playerInput == "Income":

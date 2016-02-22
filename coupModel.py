@@ -10,20 +10,24 @@ class Player(object):
     Still alive (in the game)
     """
     name = ""
+    slackId = ""
+    slackChannel = ""
     gold = 0
     cards = []
     deadCards = []
     influence = 0
     # isAlive = True
 
-    def __init__(self, name, gold, cards, influence):
+    def __init__(self, name, slackId, slackChannel, gold, cards, influence):
         self.name = name
+        self.slackId = slackId
+        self.slackChannel = slackChannel
         self.gold = gold
         self.cards = cards
         self.influence = influence
 
 # Initialize a player, this occurs at the start of a game
-def makePlayer(deck, name):
+def makePlayer(deck, name, slackId, slackChannel):
     """
     Requirements: dealCards()
 
@@ -34,7 +38,7 @@ def makePlayer(deck, name):
     gold = 2
     cards = []
     influence = 2
-    player = Player(name, gold, cards, influence)
+    player = Player(name, slackId, slackChannel, gold, cards, influence)
     dealCards(deck, player, 2)
     print vars(player) # for logging purposes only
     return player
@@ -132,17 +136,23 @@ def displayBoard(players):
     Influence Left and Cards
     Gold
     """
+    displayResult = ""
     for player in players:
         if players[player].influence == 0:
-            print "%s defeated with cards: %s" % (players[player].name, 
+            displayResult += "%s defeated with cards: %s" % (players[player].name, 
                 players[player].deadCards)
+            displayResult += "\n"
         elif players[player].influence == 1:
-            print "%s has 1 life left, with %s and %s [DEAD] with %s gold" % (
+            displayResult += "%s has 1 life left, with %s and %s [DEAD] with %s gold" % (
                 players[player].name, players[player].cards, 
                 players[player].deadCards, players[player].gold)
+            displayResult += "\n"
         else: 
-            print "%s has 2 lives left, with %s with %s gold" % (players[player].name, 
+            displayResult += "%s has 2 lives left, with %s with %s gold" % (players[player].name, 
                 players[player].cards, players[player].gold)
+            displayResult += "\n"
+
+    return displayResult
 
 def goldAccounting(player, amount):
     player.gold += int(amount)

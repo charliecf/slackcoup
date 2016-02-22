@@ -17,8 +17,8 @@ print sc.api_call("api.test")
 print sc.api_call("im.open", user="U0NAWS465")
 print sc.api_call("im.open", user="U0NBKF2BZ") # opens the channel for dm to a user
 
-user_charlie = "U0NAWS465"
-user_fakecharlie = "U0NCAB0DD"
+user_charlie = "U0NAWS465" # D0NAXBNTU
+user_fakecharlie = "U0NCAB0DD" # D0NCB3F8S
 user_jeff = "U0NBKF2BZ"
 user_yitong = "U0NBKF2BZ"
 greeting = "Hello!\nNice to meet you."
@@ -44,36 +44,14 @@ while True:
     for evt in new_evts:
         print(evt)
         if "type" in evt:
-            if evt["type"] == "message" and "text" in evt:
+            if evt["type"] == "message" and "text" in evt and evt["channel"] == "C0NAXDD7S":
                 message = evt["text"]
-                print("Got a message!" + message)
-                print sc.api_call("chat.postMessage", as_user="true:", channel="C0NAXDD7S", text="got yo msg bro!")
+                print("Message from group!" + message)
+                # print sc.api_call("chat.postMessage", as_user="true:", channel="C0NAXDD7S", text="got yo msg bro!")
+            if evt["type"] == "message" and "text" in evt and evt["channel"] == user_fakecharlie:
+                message = evt["text"]
+                print("Got a message from DM!" + message)
     time.sleep(3)
-# if sc.rtm_connect():
-#     while True:
-#         new_evts = sc.rtm_read()
-#         # print new_evts
-#         for evt in new_evts:
-#             print(evt)
-#             if "type" in evt:
-#                 if evt["type"] == "message" and "text" in evt:
-#                     message = evt["text"]
-#                     print("Got a message!" + message)
-#                     print sc.api_call("chat.postMessage", as_user="true:", channel="C0NAXDD7S", text="got yo msg bro!")
-#         time.sleep(3)
-# else:
-#     print "Connection Failed, invalid token?"
-
-# while True:
-    # print sc.rtm_read()
-    # new_evts = sc.rtm_read()
-    # for evt in new_evts:
-    #     print(evt)
-        # if "type" in evt:
-        #     if evt["type"] == "message" and "text" in evt:
-        #         message=evt["text"]
-        #         print sc.api_call("chat.postMessage", as_user="true:", channel="C0NAXDD7S", text="got yo msg bro!")
-    # time.sleep(1)
 
 # l = [{u'text': u'So only this channel... hmm', u'ts': u'1456102030.000055', u'user': u'U0NAWS465', u'team': u'T0NAWQP09', u'type': u'message', u'channel': u'C0NAXDD7S'}]
 # pprint.pprint(l)
