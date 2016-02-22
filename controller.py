@@ -31,53 +31,53 @@ displayBoard(players)
 print "-----------------------------------------"
 while True:
     for playerID in range(temp_playerInputPlayers):
-    	if isPlayerAlive(players[str('player' + temp_playerInputNames[playerID])]):
-	        print "Player %s your turn! What do you do?" % players[str('player' + temp_playerInputNames[playerID])].name
-	        print "Income | Foreign Aid | Coup | Tax | Steal | Assassinate | Exchange"
-	        playerTurnTrigger = True
-	        while playerTurnTrigger == True:
-		        playerInput = raw_input("> ")
-		        # Player Inputs
-		        # For every other player, Accept | Challenge options + more
-		        if playerInput == "Income":
-		        	income(players[str('player' + temp_playerInputNames[playerID])])
-		        	playerTurnTrigger = False
+        if isPlayerAlive(players[str('player' + temp_playerInputNames[playerID])]):
+            print "Player %s your turn! What do you do?" % players[str('player' + temp_playerInputNames[playerID])].name
+            print "Income | Foreign Aid | Coup | Tax | Steal | Assassinate | Exchange"
+            playerTurnTrigger = True
+            while playerTurnTrigger == True:
+                playerInput = raw_input("> ")
+                # Player Inputs
+                # For every other player, Accept | Challenge options + more
+                if playerInput == "Income":
+                    income(players[str('player' + temp_playerInputNames[playerID])])
+                    playerTurnTrigger = False
 
-		        elif playerInput == "Foreign Aid":
-		        	print "Does anyone challenge?" # build challenge function
+                elif playerInput == "Foreign Aid":
+                    print "Does anyone challenge?" # build challenge function
 
-		        	foreignAid(players[str('player' + temp_playerInputNames[playerID])])
-		        	playerTurnTrigger = False
+                    foreignAid(players[str('player' + temp_playerInputNames[playerID])])
+                    playerTurnTrigger = False
 
-		        elif playerInput == "Coup":
-		        	coupTarget(players[str('player' + temp_playerInputNames[playerID])])
-		        	playerTurnTrigger = False
+                elif playerInput == "Coup":
+                    coupTarget(players[str('player' + temp_playerInputNames[playerID])])
+                    playerTurnTrigger = False
 
-		        elif playerInput == "Tax":
-		        	foreignAid(players[str('player' + temp_playerInputNames[playerID])])
-		        	playerTurnTrigger = False
+                elif playerInput == "Tax":
+                    foreignAid(players[str('player' + temp_playerInputNames[playerID])])
+                    playerTurnTrigger = False
 
-		        elif playerInput == "Steal":
-		        	foreignAid(players[str('player' + temp_playerInputNames[playerID])])
-		        	playerTurnTrigger = False
+                elif playerInput == "Steal":
+                    foreignAid(players[str('player' + temp_playerInputNames[playerID])])
+                    playerTurnTrigger = False
 
-		        elif playerInput == "Assassinate":
-		        	foreignAid(players[str('player' + temp_playerInputNames[playerID])])
-		        	playerTurnTrigger = False
+                elif playerInput == "Assassinate":
+                    foreignAid(players[str('player' + temp_playerInputNames[playerID])])
+                    playerTurnTrigger = False
 
-		        elif playerInput == "Exchange":
-		        	foreignAid(players[str('player' + temp_playerInputNames[playerID])])
-		        	playerTurnTrigger = False
+                elif playerInput == "Exchange":
+                    foreignAid(players[str('player' + temp_playerInputNames[playerID])])
+                    playerTurnTrigger = False
 
-		        else:
-		        	print "invalid input"
+                else:
+                    print "invalid input"
 
-		# Check for victory condition
-		deadPlayers = 0
-		for i in range(temp_playerInputPlayers):
-			if isPlayerAlive(players[str('player' + temp_playerInputNames[i])]):
-				deadPlayers += 1
-		if deadPlayers >= temp_playerInputPlayers - 1:
-			print "GAME OVER!"
-			break
+        # Check for victory condition
+        deadPlayers = 0
+        for i in range(temp_playerInputPlayers):
+            if isPlayerAlive(players[str('player' + temp_playerInputNames[i])]):
+                deadPlayers += 1
+        if deadPlayers >= temp_playerInputPlayers - 1:
+            print "GAME OVER!"
+            break
 
