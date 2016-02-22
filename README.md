@@ -8,6 +8,8 @@ Foreign aid: Take two coins from the treasury
 Coup: Pay 7 coins and launch a coup against an opponent. Forcing opponent to lose an influence.
 * If you have 10 or more coins, you must take this action
 
+test
+
 **Cards**
 Assassin: Pay 3 coins and try to assassinate another player's character
 Captain: Take two coins from another player, or block someone from stealing coins from you
