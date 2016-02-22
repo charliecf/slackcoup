@@ -24,7 +24,7 @@ user_yitong = "U0NBKF2BZ"
 greeting = "Hello!\nNice to meet you."
 # print sc.api_call("chat.postMessage", as_user="true:", channel=user_charlie, text=greeting)
 # print sc.api_call("chat.postMessage", as_user="true:", channel=user_yitong, text=greeting)
-# print sc.api_call("chat.postMessage", as_user="true:", channel="C0NAXDD7S", text=greeting)
+print sc.api_call("chat.postMessage", as_user="true:", channel="C0NAXDD7S", text=greeting)
 
 # To the channel
 message = "Hello team, let's start a game of Coup!"
@@ -37,9 +37,47 @@ message = "Hello team, let's start a game of Coup!"
 # else:
 #     print "Connection Failed, invalid token?"
 
-l = [{u'text': u'So only this channel... hmm', u'ts': u'1456102030.000055', u'user': u'U0NAWS465', u'team': u'T0NAWQP09', u'type': u'message', u'channel': u'C0NAXDD7S'}]
-pprint.pprint(l)
-if 'only' in l:
-    print "It works!!!!!"
-else:
-    print "poop............."
+sc.rtm_connect()
+while True:
+    new_evts = sc.rtm_read()
+    # print new_evts
+    for evt in new_evts:
+        print(evt)
+        if "type" in evt:
+            if evt["type"] == "message" and "text" in evt:
+                message = evt["text"]
+                print("Got a message!" + message)
+                print sc.api_call("chat.postMessage", as_user="true:", channel="C0NAXDD7S", text="got yo msg bro!")
+    time.sleep(3)
+# if sc.rtm_connect():
+#     while True:
+#         new_evts = sc.rtm_read()
+#         # print new_evts
+#         for evt in new_evts:
+#             print(evt)
+#             if "type" in evt:
+#                 if evt["type"] == "message" and "text" in evt:
+#                     message = evt["text"]
+#                     print("Got a message!" + message)
+#                     print sc.api_call("chat.postMessage", as_user="true:", channel="C0NAXDD7S", text="got yo msg bro!")
+#         time.sleep(3)
+# else:
+#     print "Connection Failed, invalid token?"
+
+# while True:
+    # print sc.rtm_read()
+    # new_evts = sc.rtm_read()
+    # for evt in new_evts:
+    #     print(evt)
+        # if "type" in evt:
+        #     if evt["type"] == "message" and "text" in evt:
+        #         message=evt["text"]
+        #         print sc.api_call("chat.postMessage", as_user="true:", channel="C0NAXDD7S", text="got yo msg bro!")
+    # time.sleep(1)
+
+# l = [{u'text': u'So only this channel... hmm', u'ts': u'1456102030.000055', u'user': u'U0NAWS465', u'team': u'T0NAWQP09', u'type': u'message', u'channel': u'C0NAXDD7S'}]
+# pprint.pprint(l)
+# if 'only' in l:
+#     print "It works!!!!!"
+# else:
+#     print "poop............."
