@@ -112,24 +112,6 @@ def removeInfluence(player):
         print "Player is dead already"
         return None
 
-def giveUpInfluence(player):
-    """
-    Requirements: doesPlayerHaveCard(), removeInfluence()
-
-    player has lost an influence, needs to pick an influence to give up
-    """
-    print "%s has lost an influence, please pick an influence to lose" % (player.name)
-    while True:
-        card = raw_input("> ")
-        if doesPlayerHaveCard(player, card):
-            print "%s has given up his %s" % (player.name, card)
-            player.cards.remove(card)
-            player.deadCards.append(card)
-            removeInfluence(player)
-            return
-        else:
-            print "You don't have a %s" % (card)
-
 def displayBoard(players):
     """
     Displays all the status of every player:
@@ -166,52 +148,6 @@ def haveEnoughGold(player, amount):
     else:
         return False
 
-def coupTarget(player, target):
-    """
-    Requirements: haveEnoughGold(), goldAccounting(), giveUpInfluence()
-
-    player -7 coins
-    Remove influence from target
-    not possible to block or challenge
-    """
-    if haveEnoughGold(player, 7):
-        goldAccounting(player, -7)
-        giveUpInfluence(target)
-    else:
-        print "You do not have enough money to coup... nice try..."
-
-def assassinateTarget(player, target):
-    """
-    Requirements: haveEnoughGold(), goldAccounting(), giveUpInfluence()
-
-    player -3 coins
-    Attempts to assassinate target (Assassin ability)
-        IF successful: remove influence from target
-        ELSE: None
-    """
-    if haveEnoughGold(player, 3):
-        goldAccounting(player, -3)
-        giveUpInfluence(target)
-    else:
-        print "You do not have enough money to assassinate... nice try..."
-
-def stealTarget(player, target):
-    """
-    player attempts to steal from target (Captain ability)
-        IF successful: -2 coins from target, player +2 coins
-        ELSE: None
-    """
-    if target.gold == 0:
-        print "%s stole from a broke man... (0 gold) from %s" % (player, target)
-    elif target.gold == 1:
-        print "%s stole 1 gold from %s" % (player, target)
-        goldAccounting(player, +1)
-        goldAccounting(target, -2)
-    else:
-        print "%s stole 2 gold from %s" % (player, target)
-        goldAccounting(player, +2)
-        goldAccounting(target, -2)
-
 def income(player):
     """
     Requirements: goldAccounting()
@@ -244,19 +180,11 @@ def taxDuke(player):
     print "%s abused his power as a Duke and taxed the poor, good job! +3 Gold" % player.name
     goldAccounting(player, 3)
 
-def exchangeCards(deck, player):
-    """
-    Requirements: dealCards(), returnCardsToDeck()
-
-    player attempts to exchange cards (Ambassador ability)
-        IF successful player +2 cards, return 2 cards
-        ELSE: None
-    """
-    dealCards(deck, player, 2)
-    while len(player.cards) != 2:
-        card = raw_input("What card would you like to return? > ")
-        returnCardsToDeck(deck, player, card)
-    print "completed exchange!"
+def getPlayerFromSlackId(players, slackId):
+    for player in players:
+        if players[player].slackId == slackId:
+            return players[player]
+    return None
 
 # ======== GAME MASTER TOOLS ======== 
 def killPlayer(player):
@@ -264,3 +192,31 @@ def killPlayer(player):
     players[player].isAlive = False
     print vars(players[player])
 
+
+### ====== GAME MASTER TESTING ======
+# from coupDeck import *
+
+# # How many players?
+# temp_playerInputPlayers = 2
+# temp_playerInputNames = ['user_charlie', 'user_fakecharlie']
+# temp_playerInputIds = ['U0NAWS465', 'U0NCAB0DD']
+# temp_playerInputChannel = ['D0NAXBNTU', 'D0NCB3F8S']
+
+# # Initialize variables
+# # 1. Shuffle Deck
+# gameDeck = odeck[:]
+# gameDeck = shuffleDeck(gameDeck)
+# print gameDeck
+
+# # 2. Create Player Objects
+# players = {}
+# for player in temp_playerInputNames:
+#     print ("creating %s player..." % player)
+#     players["player{0}".format(player)] = makePlayer(gameDeck, player, 
+#         temp_playerInputIds[temp_playerInputNames.index(player)], 
+#         temp_playerInputChannel[temp_playerInputNames.index(player)])
+
+# displayBoard(players)
+# print "-----------------------------------"
+
+# print getPlayerFromSlackId(players, "U0NAWS465")

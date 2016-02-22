@@ -35,5 +35,29 @@ def getUserInput(channel):
 	                return message
 	    time.sleep(1)
 
+def getUserInputTimeout(channel, timeout):
+	"""
+	channel = Slack Channel ID
+	timeout = int in seconds
+
+	This is used for challenges and optional inputs where input times out 
+	after a certain limit. 
+	"""
+	timeoutTimer = 0
+	sc.rtm_connect()
+	while timeoutTimer < int(timeout):
+	    new_evts = sc.rtm_read()
+	    # print new_evts
+	    for evt in new_evts:
+	        print(evt)
+	        if "type" in evt:
+	            if evt["type"] == "message" and "text" in evt and evt["channel"] == channel:
+	                message = evt["text"]
+	                user = evt["user"]
+	                return message, user
+	    time.sleep(1)
+	    timeoutTimer += 1
+
+
 
 # postMesage(groupChannel, "msgGroupFunc Test\n second line?")
