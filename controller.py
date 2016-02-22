@@ -52,11 +52,13 @@ def challengesCard(deck, player, target, card):
         returnCardsToDeck(deck, target, card)
         dealCards(deck, player, 1)
         postMessage(player.slackId, "Your cards are: %s" % player.cards)
+        return False
     else:
         postMessage(groupChannel, "%s is indeed a liar and does not have a %s" % (target.name, card))
         postMessage(groupChannel, "%s loses an influence" % target.name)
         postMessage(player.slackId, "You won the challenge! Winner winner chicken dinner!!!")
         giveUpInfluence(target)
+        return True
 
 def coupTarget(player, target):
     """
@@ -80,13 +82,13 @@ def stealTarget(player, target):
         ELSE: None
     """
     if target.gold == 0:
-        print "%s stole from a broke man... (0 gold) from %s" % (player, target)
+        postMessage(groupChannel, "%s stole from a broke man... (0 gold) from %s" % (player, target))
     elif target.gold == 1:
-        print "%s stole 1 gold from %s" % (player, target)
+        postMessage(groupChannel, "%s stole 1 gold from %s" % (player, target))
         goldAccounting(player, +1)
         goldAccounting(target, -2)
     else:
-        print "%s stole 2 gold from %s" % (player, target)
+        postMessage(groupChannel, "%s stole 2 gold from %s" % (player, target))
         goldAccounting(player, +2)
         goldAccounting(target, -2)
 
@@ -119,6 +121,61 @@ def exchangeCards(deck, player):
         returnCardsToDeck(deck, player, card)
     print "completed exchange!"
 
+
+def action_stealTarget(deck, player, target):
+    """
+    Requirements: challengesCard(), stealTarget()
+    """
+    postMessage(groupChannel, "%s attempts to steal from %s in the name CaptainCrunch!" % (player.name, target.name))
+    postMessage(target.slackId, "%s is trying to steal from you... what do you do?" % player.name)
+    postMessage(target.slackId, "Allow | Block (with Captain) | Block (with Ambassador) | Challenge")
+    playerInput = getUserInput(target.slackChannel)
+    if playerInput == "Allow":
+        postMessage(target.slackId, "I see you're taking it like a wuss huh?")
+        stealTarget(player, target)
+
+    elif playerInput == "Block (with Captain)":
+        # Challenger claims to have a Captain
+        postMessage(groupChannel, "%s claims to have a Captain, any challengers (30 seconds to respond)?" % player.name)
+        postMessage(groupChannel, "Say: 'Challenge'")
+        challengerInput = ""
+        challengerInput = getUserInputTimeout(groupChannel, 30)
+        challengerUser = getPlayerFromSlackId(players, challengerInput[1])
+        if challengerInput[0] == "Challenge":
+            # print challengerInput[1]
+            challengesCard(gameDeck, challengerUser, players[str('player' + temp_playerInputNames[playerID])], "Captain")
+            if challengesCard(gameDeck, challengerUser, players[str('player' + temp_playerInputNames[playerID])], "Captain") == False:
+                postMessage(groupChannel, "Blocked Steal with Captain")
+            else:
+                stealTarget(player, target)
+        else:
+            postMessage(groupChannel, "Blocked Steal with Captain")
+
+    elif playerInput == "Block (with Ambassador)":
+        # Challenger claims to have a Ambassador
+        postMessage(groupChannel, "%s claims to have a Ambassador, any challengers (30 seconds to respond)?" % player.name)
+        postMessage(groupChannel, "Say: 'Challenge'")
+        challengerInput = ""
+        challengerInput = getUserInputTimeout(groupChannel, 30)
+        challengerUser = getPlayerFromSlackId(players, challengerInput[1])
+        if challengerInput[0] == "Challenge":
+            # print challengerInput[1]
+            challengesCard(gameDeck, challengerUser, players[str('player' + temp_playerInputNames[playerID])], "Ambassador")
+            if challengesCard(gameDeck, challengerUser, players[str('player' + temp_playerInputNames[playerID])], "Ambassador") == False:
+                postMessage(groupChannel, "Blocked Steal with Ambassador")
+            else:
+                stealTarget(player, target)
+        else:
+            postMessage(groupChannel, "Blocked Steal with Ambassador")
+
+    elif playerInput == "Challenge":
+        challengesCard(deck, player, target, "Captain")
+        if challengesCard(deck, player, target, "Captain") == False:
+            stealTarget(player, target)           
+    else:
+        postMessage(target.slackId, "I don't understand you... but I'll assume you like getting robbed")
+        stealTarget(player, target)
+
 def selfStatusUpdate(player):
     cards = player.cards
     deadCards = player.deadCards
@@ -136,6 +193,7 @@ def selfStatusUpdate(player):
 # Game Starts:
 postMessage(groupChannel, "-----------------------------------------")
 postMessage(groupChannel, "Let the Coup BEGIN!")
+postMessage(groupChannel, "Listen up kids, I'm an alpha Octopus, so if you can't follow my instructions to the tee, go buy a dictionary!")
 print "-----------------------------------------"
 # How many players?
 temp_playerInputPlayers = 2
@@ -193,6 +251,7 @@ while True:
                     postMessage(groupChannel, "Say: 'I have a Duke'")
                     challengerInput = ""
                     challengerInput = getUserInputTimeout(groupChannel, 30)
+                    challengerUser = getPlayerFromSlackId(players, challengerInput[1])
                     if challengerInput[0] != 'I have a Duke':
                         # No challenges:
                         postMessage(groupChannel, "30 seconds up! I see no challengers...'")
@@ -203,13 +262,17 @@ while True:
                         # Challenger claims to have a Duke
                         postMessage(groupChannel, "%s claims to have a Duke, any challengers (30 seconds to respond)?" % challengerUser.name)
                         postMessage(groupChannel, "Say: 'Challenge'")
-                        challengerInput = ""
-                        challengerInput = getUserInputTimeout(groupChannel, 30)
-                        challengerUser = getPlayerFromSlackId(players, challengerInput[1])
+                        challengerInput2 = ""
+                        challengerInput2 = getUserInputTimeout(groupChannel, 30)
+                        challengerUser2 = getPlayerFromSlackId(players, challengerInput[1])
                         if challengerInput[0] == "Challenge":
                             # Check if there is Duke
                             # print challengerInput[1]
-                            challengesCard(gameDeck, players[str('player' + temp_playerInputNames[playerID])], challengerUser, "Duke")
+                            challengesCard(gameDeck, challengerUser2, challengerUser, "Duke")
+                            if challengesCard(gameDeck, challengerUser2, challengerUser, "Duke") == False:
+                                postMessage(groupChannel, "Blocked Foreign Aid with Duke")
+                            else:
+                                foreignAid(players[str('player' + temp_playerInputNames[playerID])])
                         else:
                             postMessage(groupChannel, "Blocked Foreign Aid with Duke")
 
@@ -242,12 +305,22 @@ while True:
                     playerTurnTrigger = False
 
                 elif playerInput == "Steal":
-                    foreignAid(players[str('player' + temp_playerInputNames[playerID])])
+                    postMessage(players[str('player' + temp_playerInputNames[playerID])].slackId, 
+                        "You can steal from: " + str(list(players.keys())))                    
+                    playerTargetInput = getUserInput(players[str('player' + temp_playerInputNames[playerID])].slackChannel)
+                    action_stealTarget(gameDeck, players[str('player' + temp_playerInputNames[playerID])], players[str(playerTargetInput)])
                     playerTurnTrigger = False
 
                 elif playerInput == "Assassinate":
-                    foreignAid(players[str('player' + temp_playerInputNames[playerID])])
-                    playerTurnTrigger = False
+                    if haveEnoughGold(players[str('player' + temp_playerInputNames[playerID])], 3) == True:
+                        postMessage(players[str('player' + temp_playerInputNames[playerID])].slackId, 
+                            "You can assassinate: " + str(list(players.keys())))
+                        playerTargetInput = getUserInput(players[str('player' + temp_playerInputNames[playerID])].slackChannel)
+                        coupTarget(players[str('player' + temp_playerInputNames[playerID])], players[str(playerTargetInput)])
+                        selfStatusUpdate(players[str('player' + temp_playerInputNames[playerID])])
+                        playerTurnTrigger = False
+                    else:
+                        postMessage(players[str('player' + temp_playerInputNames[playerID])].slackId, "??? You're... too poor brah...")
 
                 elif playerInput == "Exchange":
                     foreignAid(players[str('player' + temp_playerInputNames[playerID])])
