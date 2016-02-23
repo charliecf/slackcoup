@@ -13,15 +13,14 @@ imList = json.loads(sc.api_call("im.list"))['ims']
 groupChannel = "C0NCQ4K4K" # coup-game-test
 # groupChannel = "C0NAXDD7S"
 
-print sc.api_call("im.open", user="U0NAWS465") # Charlie
-print sc.api_call("im.open", user="U0NCAB0DD") # fakeCharlie
-print sc.api_call("im.open", user="U0NBKF2BZ") # Jeff
-print sc.api_call("im.open", user="U0NAWTM9D") # Yitong
-
-user_charlie = "U0NAWS465"
-user_fakecharlie = "U0NCAB0DD"
-user_jeff = "U0NBKF2BZ"
-user_yitong = "U0NAWTM9D"
+# print sc.api_call("im.open", user="U0NAWS465") # Charlie
+# print sc.api_call("im.open", user="U0NCAB0DD") # fakeCharlie
+# print sc.api_call("im.open", user="U0NBKF2BZ") # Jeff
+# print sc.api_call("im.open", user="U0NAWTM9D") # Yitong
+# user_charlie = "U0NAWS465"
+# user_fakecharlie = "U0NCAB0DD"
+# user_jeff = "U0NBKF2BZ"
+# user_yitong = "U0NAWTM9D"
 
 def compileUserListDic():
 	userListDic = {}
@@ -74,7 +73,5 @@ def getUserInputTimeout(channel, timeout):
 	    time.sleep(1)
 	    timeoutTimer += 1
 	return None, None
-
-
 
 # postMesage(groupChannel, "msgGroupFunc Test\n second line?")
