@@ -191,7 +191,7 @@ def action_assassinateTarget(deck, player, target):
     """
     Requirements: challengesCard(), assassinateTarget()
     """
-    postMessage(groupChannel, "%s calls the Assassins brotherhood and puts a mark on %s!" % (player.name, target.name))
+    postMessage(groupChannel, "%s calls the :bow_and_arrow: assassins on %s!" % (player.name, target.name))
     postMessage(target.slackId, "%s is trying to assassinate you... what do you do?" % player.name)
     postMessage(target.slackId, "Allow | Block (with Contessa) | Challenge")
     playerInput = getUserInput(target.slackChannel)
@@ -252,14 +252,11 @@ def selfStatusUpdate(player):
     cards = player.cards
     deadCards = player.deadCards
     gold = player.gold
-    postMessage(player.slackId, "You have %s gold" % gold)
-    if deadCards == "":
-        postMessage(player.slackId, "You have %s cards" % cards)
+    postMessage(player.slackId, ":moneybag:: %s gold" % gold)
+    if len(cards) == 2:
+        postMessage(player.slackId, ":flower_playing_cards:: {}, {}".format(*cards))
     else:
-        if len(cards) == 2:
-            postMessage(player.slackId, ":flower_playing_cards:: {}, {}".format(*cards))
-        else:
-            postMessage(player.slackId, "You have %s cards and %s [DEAD]" % (cards, deadCards))
+        postMessage(player.slackId, ":flower_playing_cards:: {}, {}[DEAD]".format(*(cards, deadCards)))
             
 
 def displayBoard(players):
@@ -275,11 +272,12 @@ def displayBoard(players):
                 players[player].deadCards)
             displayResult += "\n"
         elif players[player].influence == 1:
-            displayResult += "%s has 1 life left and %s [DEAD] with %s gold" % (
-                players[player].name, players[player].deadCards, players[player].gold)
+            displayResult += "%s: 1 life, " % (players[player].name)
+            displayResult += "{}[DEAD], ".format(*players[player].deadCards)
+            displayResult += "and %s gold" % (players[player].gold)
             displayResult += "\n"
         else: 
-            displayResult += "%s has 2 lives left, with %s gold" % (
+            displayResult += "%s: 2 lives and %s gold" % (
                 players[player].name, players[player].gold)
             displayResult += "\n"
 
@@ -292,13 +290,13 @@ def displayBoard(players):
 # Game Starts:
 postMessage(groupChannel, "-----------------------------------------")
 postMessage(groupChannel, "Let the Coup BEGIN!")
-postMessage(groupChannel, "Listen up kids, I'm an alpha Octopus, so if you can't follow my instructions to the tee, go buy a dictionary!")
+postMessage(groupChannel, "Listen up kids, I'm an alpha :octopus:, so if you can't follow my instructions to the tee, TOUGH! :triumph: ")
 print "-----------------------------------------"
 
 # How many players?
 userListDic = compileUserListDic()
 
-postMessage(groupChannel, "Who wants to play? Please type 'join game'")
+postMessage(groupChannel, "Who's in? Type 'join game'")
 newGamePlayersId = []
 newGamePlayersName = []
 timeoutTimer = 0
@@ -362,7 +360,7 @@ while True:
         postMessage(groupChannel, displayBoard(players))
         selfStatusUpdate(players[player])
         if isPlayerAlive(players[player]):
-            postMessage(groupChannel, "Player %s's turn!" % players[player].name)
+            postMessage(groupChannel, ":arrow_right: %s's turn!" % players[player].name)
             postMessage(players[player].slackId, 
                 "Your turn! What will you do? \nIncome | Foreign Aid | Coup | Tax | Steal | Assassinate | Exchange")
             playerTurnTrigger = True
