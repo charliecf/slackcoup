@@ -296,10 +296,43 @@ print "-----------------------------------------"
 # temp_playerInputIds = ['U0NAWS465', 'U0NCAB0DD']
 # temp_playerInputChannel = ['D0NAXBNTU', 'D0NCB3F8S']
 
-temp_playerInputPlayers = 2
-temp_playerInputNames = ['user_charlie', 'user_yitong']
-temp_playerInputIds = ['U0NAWS465', 'U0NAWTM9D']
-temp_playerInputChannel = ['D0NAXBNTU', 'D0NAU1R43']
+# temp_playerInputPlayers = 2
+# temp_playerInputNames = ['user_charlie', 'user_yitong']
+# temp_playerInputIds = ['U0NAWS465', 'U0NAWTM9D']
+# temp_playerInputChannel = ['D0NAXBNTU', 'D0NAU1R43']
+
+userListDic = compileUserListDic()
+
+postMessage(groupChannel, "Who wants to play? Please type 'join game'")
+newGamePlayersId = []
+newGamePlayersName = []
+timeoutTimer = 0
+sc.rtm_connect()
+while timeoutTimer < 30:
+    new_evts = sc.rtm_read()
+    for evt in new_evts:
+        print(evt)
+        if "type" in evt:
+            if evt["type"] == "message" and "text" in evt and evt["channel"] == groupChannel:
+                message = evt["text"]
+                user = evt["user"]
+                if message == 'join game':                
+                    newGamePlayersId.append(user)
+                    postMessage(groupChannel, "%s successfully joined" % userListDic[user][0])
+                    newGamePlayersName.append(userListDic[user][0])
+                print newGamePlayersId
+    time.sleep(1)
+    timeoutTimer += 1
+
+print newGamePlayersName
+print newGamePlayersId
+
+# Exit if not enough players
+if len(newGamePlayersId) < 2:
+    postMessage(groupChannel, "Not enough players :sob:")
+    exit()
+
+postMessage(groupChannel, "Starting a new game with: %s" % newGamePlayersName)
 
 # Initialize variables
 # 1. Shuffle Deck
@@ -309,18 +342,14 @@ print gameDeck
 
 # 2. Create Player Objects
 players = {}
-for player in temp_playerInputNames:
-    postMessage(groupChannel, "player %s joining the game..." % player)
-    players["player{0}".format(player)] = makePlayer(gameDeck, player, 
-        temp_playerInputIds[temp_playerInputNames.index(player)], 
-        temp_playerInputChannel[temp_playerInputNames.index(player)])
+for player in newGamePlayersId:
+    players[player] = makePlayer(gameDeck, userListDic[player][0], 
+        player, userListDic[player][2])
 
-for playerID in range(temp_playerInputPlayers):
-    selfStatusUpdate(players[str('player' + temp_playerInputNames[playerID])])
+for player in players:
+    selfStatusUpdate(players[player])
 
-# postMessage(groupChannel, displayBoard(players))
-
-goldAccounting(players['playeruser_charlie'], 20)
+# goldAccounting(players['playeruser_charlie'], 20)
 # coupTarget(players['playerCharlie'], players['playerAynRand'])
 # coupTarget(players['playerCharlie'], players['playerAynRand'])
 # displayBoard(players)

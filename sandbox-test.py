@@ -1,27 +1,37 @@
-# import signal
-# import time
+import time
+import pprint
+import json
+from slackclient import SlackClient
 
-# def handler(signum, frame):
-# 	print "Forever is over!"
-# 	raise Exception("end of time")
+token = "xoxb-22371870822-R4NMrSgKKyldo4xJj7nQNM4F" # Random Projects -- will need to change in the future
+sc = SlackClient(token)
+print token
+print "-------------------"
 
-# def loop_forever():
-# 	while 1:
-# 		print "sec"
-# 		time.sleep(1)
+print sc.api_call("api.test")
 
-# signal.signal(signal.SIGALRM, handler)
-# signal.alarm(10)
+usersList = json.loads(sc.api_call("users.list"))['members']
 
-# try:
-# 	loop_forever()
-# except Exception, exc:
-# 	print exc
+for user in usersList:
+	print user['name'], user['id']
 
-# ---------------------------------------------------
-def hello():
-	user = "12345"
-	message = "hello world!"
-	return message, user
+imList = json.loads(sc.api_call("im.list"))['ims']
 
-print hello()[0]
+for im in imList:
+	print im['user'], im['id']
+
+userListDic = {}
+
+exit()
+
+for user in usersList:
+	name = user['name']
+	slackId = user['id']
+	for im in imList:
+		if im['user'] == slackId:
+			channelId = im['id']
+	userListDic[slackId] = [{'name': name}, slackId, channelId]
+
+print userListDic
+
+print userListDic['U0NAWS465'][0]

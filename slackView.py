@@ -1,11 +1,18 @@
 import time
 import pprint
+import json
 from slackclient import SlackClient
 
 token = "xoxb-22371870822-R4NMrSgKKyldo4xJj7nQNM4F" # Random Projects -- will need to change in the future
 sc = SlackClient(token)
 
 print sc.api_call("api.test")
+usersList = json.loads(sc.api_call("users.list"))['members']
+imList = json.loads(sc.api_call("im.list"))['ims']
+
+groupChannel = "C0NCQ4K4K" # coup-game-test
+# groupChannel = "C0NAXDD7S"
+
 print sc.api_call("im.open", user="U0NAWS465") # Charlie
 print sc.api_call("im.open", user="U0NCAB0DD") # fakeCharlie
 print sc.api_call("im.open", user="U0NBKF2BZ") # Jeff
@@ -16,8 +23,17 @@ user_fakecharlie = "U0NCAB0DD"
 user_jeff = "U0NBKF2BZ"
 user_yitong = "U0NAWTM9D"
 
-groupChannel = "C0NCQ4K4K" # coup-game-test
-# groupChannel = "C0NAXDD7S"
+def compileUserListDic():
+	userListDic = {}
+	for user in usersList:
+		name = user['name']
+		slackId = user['id']
+		for im in imList:
+			if im['user'] == slackId:
+				channelId = im['id']
+		userListDic[slackId] = [name, slackId, channelId]
+
+	return userListDic
 
 def postMessage(channel, message):
 	print sc.api_call("chat.postMessage", channel=channel, text=message, as_user="true")
