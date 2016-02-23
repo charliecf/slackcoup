@@ -359,7 +359,6 @@ while True:
     for player in players:
         # New turn
         postMessage(groupChannel, displayBoard(players))
-        selfStatusUpdate(players[player])
         
         # Create a list of potential targets
         potentialTargets = []
@@ -370,8 +369,9 @@ while True:
         # Proceed if player is still alive
         if isPlayerAlive(players[player]):
             postMessage(groupChannel, ":arrow_right: %s's turn!" % players[player].name)
-            postMessage(players[player].slackId, 
-                "Your turn! What will you do? \nIncome | Foreign Aid | Coup | Tax | Steal | Assassinate | Exchange")
+            postMessage(players[player].slackId, ":arrow_right: your move, what will you do?")
+            selfStatusUpdate(players[player])
+            postMessage(players[player].slackId, "Income | Foreign Aid | Coup | Tax | Steal | Assassinate | Exchange")
             playerTurnTrigger = True
             while playerTurnTrigger == True:
                 playerInput = getUserInput(players[player].slackChannel)
