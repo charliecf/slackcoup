@@ -1,10 +1,7 @@
-l = ['assassin', 'captain']
-cards = ['Assassin']
-deadCards = ['Captain']
-print l
+aList = [123, 'xyz', 'zara', 'abc', 'xyz']
 
-print tuple(l)
+aList.remove('abc')
+print "List : ", aList
 
-print"hello there {!s}, {!s}".format(*l)
-print ', '.join(l)
-print ":flower_playing_cards:: {!s}, {!s}[DEAD]".format(*l)
+l = ['assassin', 'captain', 'duke']
+print l.remove('duke')

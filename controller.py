@@ -357,8 +357,17 @@ print "-----------------------------------------"
 postMessage(groupChannel, "-----------------------------------------")
 while True:
     for player in players:
+        # New turn
         postMessage(groupChannel, displayBoard(players))
         selfStatusUpdate(players[player])
+        
+        # Create a list of potential targets
+        potentialTargets = []
+        for otherplayer in players:
+            if isPlayerAlive(players[otherplayer]) == True and otherplayer != player:
+                potentialTargets.append(players[otherplayer].name)
+
+        # Proceed if player is still alive
         if isPlayerAlive(players[player]):
             postMessage(groupChannel, ":arrow_right: %s's turn!" % players[player].name)
             postMessage(players[player].slackId, 
@@ -411,7 +420,7 @@ while True:
                 elif playerInput == "Coup":
                     if haveEnoughGold(players[player], 7) == True:
                         postMessage(players[player].slackId, 
-                            "You can coup: " + str(list(players.keys())))
+                            "You can coup: " + ' or '.join(potentialTargets))
                         playerTargetInput = getUserInput(players[player].slackChannel)
                         coupTarget(players[player], players[str(playerTargetInput)])
                         selfStatusUpdate(players[player])
@@ -436,7 +445,7 @@ while True:
 
                 elif playerInput == "Steal":
                     postMessage(players[player].slackId, 
-                        "You can steal from: " + str(list(players.keys())))                    
+                        "You can steal from: " + ' or '.join(potentialTargets))                    
                     playerTargetInput = getUserInput(players[player].slackChannel)
                     action_stealTarget(gameDeck, players[player], players[str(playerTargetInput)])
                     playerTurnTrigger = False
@@ -444,7 +453,7 @@ while True:
                 elif playerInput == "Assassinate":
                     if haveEnoughGold(players[player], 3) == True:
                         postMessage(players[player].slackId, 
-                            "You can assassinate: " + str(list(players.keys())))
+                            "You can assassinate: " + ' or '.join(potentialTargets))
                         playerTargetInput = getUserInput(players[player].slackChannel)
                         action_assassinateTarget(gameDeck, players[player], players[str(playerTargetInput)])
                         playerTurnTrigger = False
