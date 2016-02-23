@@ -50,8 +50,8 @@ def challengesCard(deck, player, target, card):
         giveUpInfluence(player)
         postMessage(groupChannel, "%s returns his %s into the deck and draws a new card" % (target.name, card))
         returnCardsToDeck(deck, target, card)
-        dealCards(deck, player, 1)
-        postMessage(player.slackId, "Your cards are: %s" % player.cards)
+        dealCards(deck, target, 1)
+        postMessage(target.slackId, "Your cards are: %s" % target.cards)
         return False
     else:
         postMessage(groupChannel, "%s is indeed a liar and does not have a %s" % (target.name, card))
@@ -133,6 +133,25 @@ def exchangeCards(deck, player):
 
 # action_ functions contains the challenge logic and calls the plain function 
 # which assumes a successful action
+def action_taxDuke(deck, player):
+    """
+    Requirements: challengesCard(), taxDuke()[coupModel]
+    """
+    postMessage(groupChannel, "%s declares Tax(+3 gold) abusing his power as Duke, any challengers (30 seconds to respond)?" % player.name)
+    postMessage(groupChannel, "Say: 'Challenge'")
+    challengerInput = ""
+    challengerInput = getUserInputTimeout(groupChannel, 30)
+    if challengerInput[0] == "Challenge":
+        challengerUser = getPlayerFromSlackId(players, challengerInput[1])
+        # print challengerInput[1]
+        if challengesCard(gameDeck, challengerUser, player, "Duke") == False:
+            taxDuke(deck, player)
+        else:
+            postMessage(groupChannel, "He's not a Duke and robbing us of our money... Burn him!")
+    else:
+        postMessage(groupChannel, "%s abused his power as a Duke and taxed the poor, good job! +3 Gold" % player.name)
+        taxDuke(player)
+
 def action_stealTarget(deck, player, target):
     """
     Requirements: challengesCard(), stealTarget()
@@ -391,13 +410,13 @@ while True:
                     challengerInput = ""
                     challengerInput = getUserInputTimeout(groupChannel, 30)
                     if challengerInput[0] != 'I have a Duke':
-                        challengerUser = getPlayerFromSlackId(players, challengerInput[1])
                         # No challenges:
                         postMessage(groupChannel, "30 seconds up! I see no challengers...'")
                         foreignAid(players[player])
                         postMessage(groupChannel, "%s takes Foreign Aid, +2 gold" % players[player].name)
                         postMessage(players[player].slackId, "Your have gained +2 gold from Foreign Aid")
                     else:
+                        challengerUser = getPlayerFromSlackId(players, challengerInput[1])
                         # Challenger claims to have a Duke
                         postMessage(groupChannel, "%s claims to have a Duke, any challengers (30 seconds to respond)?" % challengerUser.name)
                         postMessage(groupChannel, "Say: 'Challenge'")
@@ -429,18 +448,7 @@ while True:
                         postMessage(players[player].slackId, "??? You're... too poor brah...")
 
                 elif playerInput == "Tax":
-                    postMessage(groupChannel, "%s declares Tax abusing his power as Duke, any challengers (30 seconds to respond)?" % players[player].name)
-                    postMessage(groupChannel, "Say: 'Challenge'")
-                    challengerInput = ""
-                    challengerInput = getUserInputTimeout(groupChannel, 30)
-                    if challengerInput[0] == "Challenge":
-                        challengerUser = getPlayerFromSlackId(players, challengerInput[1])
-                        # Check if there is Duke
-                        # print challengerInput[1]
-                        challengesCard(gameDeck, challengerUser, players[player], "Duke")
-                    else:
-                        postMessage(groupChannel, "%s abused his power as a Duke and taxed the poor, good job! +3 Gold" % players[player].name)
-                        taxDuke(players[player])
+                    action_taxDuke(gameDeck, players[player])
                     playerTurnTrigger = False
 
                 elif playerInput == "Steal":
@@ -465,7 +473,8 @@ while True:
                     playerTurnTrigger = False
 
                 else:
-                    print "invalid input"
+                    postMessage(players[player].slackId, "invalid input......")
+                    print "invalid input......"
 
         # Check for victory condition
         # deadPlayers = 0
