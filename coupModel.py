@@ -108,9 +108,6 @@ def removeInfluence(player):
     """
     if isPlayerAlive(player) == True:
         player.influence -= 1
-    else:
-        print "Player is dead already"
-        return None
 
 def goldAccounting(player, amount):
     player.gold += int(amount)

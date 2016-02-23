@@ -14,24 +14,50 @@ Functions in these category should require both player input as well as
 changing backend data
 """
 
+def isGameOver():
+    remainingPlayers = 0
+    potentialWinner = ""
+    for player in players:
+        if isPlayerAlive(players[player]) == True:
+            remainingPlayers += 1
+            potentialWinner = players[player].name
+    # print remainingPlayers
+    if remainingPlayers == 1:
+        postMessage(groupChannel, "GAME IS OVER, %s WINS THE GAME" % potentialWinner)
+        exit()
+        return True
+    else:
+        return False
+
 def giveUpInfluence(player):
     """
     Requirements: doesPlayerHaveCard(), removeInfluence()
 
     player has lost an influence, needs to pick an influence to give up
+    if player has only one card left... no need to choose
     """
-    postMessage(player.slackId, "You lost an influence... please pick an influence to lose")
-    while True:
-        card = getUserInput(player.slackChannel)
-        if doesPlayerHaveCard(player, card):
-            postMessage(player.slackId, "You have chosen to give up your %s" % card)
-            postMessage(groupChannel, "%s has given up his %s" % (player.name, card))
-            player.cards.remove(card)
-            player.deadCards.append(card)
-            removeInfluence(player)
-            return
-        else:
-            postMessage(player.slackId, "You don't have a %s" % (card))
+    if len(player.cards) == 1:
+        postMessage(player.slackId, "You lost your last shot at glory...")
+        card = ''.join(player.cards)
+        player.cards.remove(card)
+        player.deadCards.append(card)
+        removeInfluence(player)        
+        isGameOver()
+        return
+    else:
+        postMessage(player.slackId, "You lost an influence... please pick an influence to lose")
+        while True:
+            card = getUserInput(player.slackChannel)
+            if doesPlayerHaveCard(player, card):
+                postMessage(player.slackId, "You have chosen to give up your %s" % card)
+                postMessage(groupChannel, "%s has given up his %s" % (player.name, card))
+                player.cards.remove(card)
+                player.deadCards.append(card)
+                removeInfluence(player)
+                isGameOver()
+                return
+            else:
+                postMessage(player.slackId, "You don't have a %s" % (card))
 
 def challengesCard(deck, player, target, card):
     """
@@ -141,7 +167,7 @@ def action_taxDuke(deck, player):
         challengerUser = getPlayerFromSlackId(players, challengerInput[1])
         # print challengerInput[1]
         if challengesCard(gameDeck, challengerUser, player, "Duke") == False:
-            taxDuke(deck, player)
+            taxDuke(player)
         else:
             postMessage(groupChannel, "He's not a Duke and robbing us of our money... Burn him!")
     else:
@@ -169,7 +195,7 @@ def action_stealTarget(deck, player, target):
         if challengerInput[0] == "Challenge":
             challengerUser = getPlayerFromSlackId(players, challengerInput[1])
             # print challengerInput[1]
-            if challengesCard(gameDeck, challengerUser, players[player], "Captain") == False:
+            if challengesCard(gameDeck, challengerUser, player, "Captain") == False:
                 postMessage(groupChannel, "Blocked Steal with Captain")
             else:
                 stealTarget(player, target)
@@ -185,7 +211,7 @@ def action_stealTarget(deck, player, target):
         if challengerInput[0] == "Challenge":
             challengerUser = getPlayerFromSlackId(players, challengerInput[1])
             # print challengerInput[1]
-            if challengesCard(gameDeck, challengerUser, players[player], "Ambassador") == False:
+            if challengesCard(gameDeck, challengerUser, player, "Ambassador") == False:
                 postMessage(groupChannel, "Blocked Steal with Ambassador")
             else:
                 stealTarget(player, target)
@@ -222,7 +248,7 @@ def action_assassinateTarget(deck, player, target):
         if challengerInput[0] == "Challenge":
             challengerUser = getPlayerFromSlackId(players, challengerInput[1])
             # print challengerInput[1]
-            if challengesCard(gameDeck, challengerUser, players[player], "Contessa") == False:
+            if challengesCard(gameDeck, challengerUser, player, "Contessa") == False:
                 postMessage(groupChannel, "Blocks Assassin with Contessa")
             else:
                 assassinateTarget(player, target)
@@ -248,7 +274,7 @@ def action_exchangeCards(deck, player):
     if challengerInput[0] == "Challenge":
         challengerUser = getPlayerFromSlackId(players, challengerInput[1])
         # print challengerInput[1]
-        if challengesCard(gameDeck, challengerUser, players[player], "Ambassador") == False:
+        if challengesCard(gameDeck, challengerUser, player, "Ambassador") == False:
             postMessage(groupChannel, "Turns out he was posing as an Ambassador... a fake!")
         else:
             exchangeCards(deck, player)
