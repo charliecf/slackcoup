@@ -101,11 +101,7 @@ def assassinateTarget(player, target):
         IF successful: remove influence from target
         ELSE: None
     """
-    if haveEnoughGold(player, 3):
-        goldAccounting(player, -3)
-        giveUpInfluence(target)
-    else:
-        print "You do not have enough money to assassinate... nice try..."
+    giveUpInfluence(target)
 
 def exchangeCards(deck, player):
     """
@@ -208,6 +204,8 @@ def action_assassinateTarget(deck, player, target):
     Requirements: challengesCard(), assassinateTarget()
     """
     postMessage(groupChannel, "%s calls the :bow_and_arrow: assassins on %s!" % (player.name, target.name))
+    goldAccounting(player, -3)
+
     postMessage(target.slackId, "%s is trying to assassinate you... what do you do?" % player.name)
     postMessage(target.slackId, "Allow | Block (with Contessa) | Challenge")
     playerInput = getUserInput(target.slackChannel)
