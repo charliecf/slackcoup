@@ -111,7 +111,7 @@ def exchangeCards(deck, player):
         IF successful player +2 cards, return 2 cards
         ELSE: None
     """
-    originalHand = player.cards
+    originalHand = list(player.cards)
     switchCounter = 0
     dealCards(deck, player, 2)
     newHand = player.cards
@@ -362,6 +362,7 @@ for player in players:
 
 # giveUpInfluence(players['playeruser_charlie'])
 # challengesCard(gameDeck, players['playeruser_charlie'], players['playeruser_fakecharlie'], "Duke")
+# exchangeCards(gameDeck, players['charlie'])
 
 # Begin Game
 print "-----------------------------------------"
