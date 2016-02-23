@@ -493,12 +493,3 @@ while True:
                 else:
                     postMessage(players[player].slackId, "invalid input......")
                     print "invalid input......"
-
-        # Check for victory condition
-        # deadPlayers = 0
-        # for i in range(temp_playerInputPlayers):
-        #     if isPlayerAlive(players[str('player' + temp_playerInputNames[i])]):
-        #         deadPlayers += 1
-        # if deadPlayers >= temp_playerInputPlayers - 1:
-        #     print "GAME OVER!"
-        #     break
