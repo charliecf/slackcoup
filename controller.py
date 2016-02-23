@@ -23,7 +23,7 @@ def isGameOver():
             potentialWinner = players[player].name
     # print remainingPlayers
     if remainingPlayers == 1:
-        postMessage(groupChannel, "GAME IS OVER, %s WINS THE GAME" % potentialWinner)
+        postMessage(groupChannel, ":crossed_flags: *%s WINS THE GAME*" % potentialWinner.upper())
         exit()
         return True
     else:
