@@ -23,6 +23,19 @@ Ambassador: Draw two character cards from the Court (the deck), choose which (if
 Contessa: Block an assassination attempt against yourself
 
 # Installation
+1. Download slackcoup code
+```
+git clone git@github.com:charliecf/slackcoup.git
+cd slackcoup
+```
+2. Install dependencies (virtualenv is recommended.)
+```
+pip install -r requirements.txt
+```
+3. Run the slackcoup bot
+```
+python controller.py
+```
 
 # License
 MIT License.

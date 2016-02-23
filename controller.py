@@ -142,7 +142,7 @@ def exchangeCards(deck, player):
     dealCards(deck, player, 2)
     newHand = player.cards
     postMessage(player.slackId, "Your cards: %s" % newHand)
-    while len(player.cards) != 2:
+    while len(player.cards) != len(originalHand):
         postMessage(player.slackId, "What card would you like to return? > ")
         card = getUserInput(player.slackChannel)
         if card in originalHand:
@@ -195,7 +195,7 @@ def action_stealTarget(deck, player, target):
         if challengerInput[0] == "Challenge":
             challengerUser = getPlayerFromSlackId(players, challengerInput[1])
             # print challengerInput[1]
-            if challengesCard(gameDeck, challengerUser, player, "Captain") == False:
+            if challengesCard(gameDeck, challengerUser, target, "Captain") == False:
                 postMessage(groupChannel, "Blocked Steal with Captain")
             else:
                 stealTarget(player, target)
@@ -211,7 +211,7 @@ def action_stealTarget(deck, player, target):
         if challengerInput[0] == "Challenge":
             challengerUser = getPlayerFromSlackId(players, challengerInput[1])
             # print challengerInput[1]
-            if challengesCard(gameDeck, challengerUser, player, "Ambassador") == False:
+            if challengesCard(gameDeck, challengerUser, target, "Ambassador") == False:
                 postMessage(groupChannel, "Blocked Steal with Ambassador")
             else:
                 stealTarget(player, target)
