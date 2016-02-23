@@ -173,7 +173,6 @@ def action_stealTarget(deck, player, target):
         if challengerInput[0] == "Challenge":
             challengerUser = getPlayerFromSlackId(players, challengerInput[1])
             # print challengerInput[1]
-            challengesCard(gameDeck, challengerUser, players[player], "Captain")
             if challengesCard(gameDeck, challengerUser, players[player], "Captain") == False:
                 postMessage(groupChannel, "Blocked Steal with Captain")
             else:
@@ -190,7 +189,6 @@ def action_stealTarget(deck, player, target):
         if challengerInput[0] == "Challenge":
             challengerUser = getPlayerFromSlackId(players, challengerInput[1])
             # print challengerInput[1]
-            challengesCard(gameDeck, challengerUser, players[player], "Ambassador")
             if challengesCard(gameDeck, challengerUser, players[player], "Ambassador") == False:
                 postMessage(groupChannel, "Blocked Steal with Ambassador")
             else:
@@ -199,7 +197,6 @@ def action_stealTarget(deck, player, target):
             postMessage(groupChannel, "Blocked Steal with Ambassador")
 
     elif playerInput == "Challenge":
-        challengesCard(deck, player, target, "Captain")
         if challengesCard(deck, player, target, "Captain") == False:
             stealTarget(player, target)           
     else:
@@ -227,7 +224,6 @@ def action_assassinateTarget(deck, player, target):
         if challengerInput[0] == "Challenge":
             challengerUser = getPlayerFromSlackId(players, challengerInput[1])
             # print challengerInput[1]
-            challengesCard(gameDeck, challengerUser, players[player], "Contessa")
             if challengesCard(gameDeck, challengerUser, players[player], "Contessa") == False:
                 postMessage(groupChannel, "Blocks Assassin with Contessa")
             else:
@@ -236,7 +232,6 @@ def action_assassinateTarget(deck, player, target):
             postMessage(groupChannel, "%s blocks Assassin with Contessa" % target.name)
 
     elif playerInput == "Challenge":
-        challengesCard(deck, target, player, "Assassin")
         if challengesCard(deck, target, player, "Assassin") == False:
             assassinateTarget(player, target)           
     else:
@@ -255,7 +250,6 @@ def action_exchangeCards(deck, player):
     if challengerInput[0] == "Challenge":
         challengerUser = getPlayerFromSlackId(players, challengerInput[1])
         # print challengerInput[1]
-        challengesCard(gameDeck, challengerUser, players[player], "Ambassador")
         if challengesCard(gameDeck, challengerUser, players[player], "Ambassador") == False:
             postMessage(groupChannel, "Turns out he was posing as an Ambassador... a fake!")
         else:
@@ -426,7 +420,6 @@ while True:
                             challengerUser2 = getPlayerFromSlackId(players, challengerInput[1])
                             # Check if there is Duke
                             # print challengerInput[1]
-                            challengesCard(gameDeck, challengerUser2, challengerUser, "Duke")
                             if challengesCard(gameDeck, challengerUser2, challengerUser, "Duke") == False:
                                 postMessage(groupChannel, "Blocked Foreign Aid with Duke")
                             else:
