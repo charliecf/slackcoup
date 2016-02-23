@@ -256,7 +256,11 @@ def selfStatusUpdate(player):
     if deadCards == "":
         postMessage(player.slackId, "You have %s cards" % cards)
     else:
-        postMessage(player.slackId, "You have %s cards and %s [DEAD]" % (cards, deadCards))
+        if len(cards) == 2:
+            postMessage(player.slackId, ":flower_playing_cards:: {}, {}".format(*cards))
+        else:
+            postMessage(player.slackId, "You have %s cards and %s [DEAD]" % (cards, deadCards))
+            
 
 def displayBoard(players):
     """
@@ -290,17 +294,8 @@ postMessage(groupChannel, "-----------------------------------------")
 postMessage(groupChannel, "Let the Coup BEGIN!")
 postMessage(groupChannel, "Listen up kids, I'm an alpha Octopus, so if you can't follow my instructions to the tee, go buy a dictionary!")
 print "-----------------------------------------"
+
 # How many players?
-# temp_playerInputPlayers = 2
-# temp_playerInputNames = ['user_charlie', 'user_fakecharlie']
-# temp_playerInputIds = ['U0NAWS465', 'U0NCAB0DD']
-# temp_playerInputChannel = ['D0NAXBNTU', 'D0NCB3F8S']
-
-# temp_playerInputPlayers = 2
-# temp_playerInputNames = ['user_charlie', 'user_yitong']
-# temp_playerInputIds = ['U0NAWS465', 'U0NAWTM9D']
-# temp_playerInputChannel = ['D0NAXBNTU', 'D0NAU1R43']
-
 userListDic = compileUserListDic()
 
 postMessage(groupChannel, "Who wants to play? Please type 'join game'")
