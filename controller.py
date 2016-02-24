@@ -6,6 +6,7 @@ from slackView import *
 
 import time, pprint
 from slackclient import SlackClient
+import random
 
 # ---------- controller functions start ----------
 """
@@ -376,6 +377,9 @@ players = {}
 for player in newGamePlayersId:
     players[userListDic[player][0]] = makePlayer(gameDeck, 
         userListDic[player][0], player, userListDic[player][2])
+
+#3. Shuffle Player Objects
+random.shuffle(players)
 
 for player in players:
     selfStatusUpdate(players[player])
